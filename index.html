@@ -373,11 +373,22 @@
       .pdesc { font-size: 12px; margin-bottom: 8px; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
       .kw-tags { display: none; }
       .success-box { display: none; }
-      .urgency { font-size: 11px; padding: 4px 9px; margin-top: 6px; }
-      .pfoot { padding-top: 8px; }
-      .pprice { font-size: 15px; }
-      .pprice-orig { font-size: 12px; }
-      .pbtn { padding: 7px 13px; font-size: 11px; white-space: nowrap; }
+      /* urgency: 한 줄로, 전체 너비 */
+      .urgency {
+        display: block; width: 100%; font-size: 11px; padding: 5px 10px;
+        margin-top: 6px; text-align: center; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis; border-radius: 6px;
+      }
+      /* pfoot: 가격 위, 버튼 아래로 세로 배치 */
+      .pfoot {
+        flex-direction: column; align-items: flex-start; gap: 6px; padding-top: 8px;
+      }
+      .pprice-wrap { gap: 1px; }
+      .pprice { font-size: 14px; }
+      .pprice-orig { font-size: 11px; }
+      .pprice-badge { font-size: 9px; padding: 2px 5px; }
+      .pprice-row { gap: 5px; flex-wrap: wrap; }
+      .pbtn { padding: 6px 14px; font-size: 11px; white-space: nowrap; align-self: flex-start; }
     }
 
     /* ── CTA ── */
