@@ -359,7 +359,87 @@
     .pbtn:hover { opacity: .85; }
     .pbtn.p { background: #7C3AED; }
 
-    /* ── MOBILE CARD LAYOUT ── */
+    /* ══════════════════════════════
+       MOBILE OVERHAUL (≤768px)
+    ══════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* ── 전체 섹션 여백 ── */
+      .sec { padding: 48px 20px; }
+      body { padding-bottom: 72px; } /* sticky CTA 공간 */
+
+      /* ── HERO ── */
+      .hero-inner { grid-template-columns: 1fr; padding: 36px 20px 32px; gap: 0; text-align: center; }
+      .hero-img-wrap { display: none; } /* 모바일: 이미지 숨기고 텍스트 집중 */
+      .hero-badge { font-size: 11px; margin-bottom: 14px; }
+      .hero h1 { font-size: 30px; letter-spacing: -0.8px; line-height: 1.25; margin-bottom: 14px; }
+      .hero-desc { font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+      .hero-btns { justify-content: center; gap: 10px; }
+      .btn-p, .btn-s {
+        padding: 14px 22px; font-size: 14px;
+        min-height: 48px; display: inline-flex; align-items: center; justify-content: center;
+      }
+
+      /* ── SECTION 제목 ── */
+      .sec-title { font-size: 22px; letter-spacing: -0.5px; }
+      .sec-sub { font-size: 14px; line-height: 1.75; }
+      .sec-tag { font-size: 10px; }
+
+      /* ── ABOUT ── */
+      .about-grid { grid-template-columns: 1fr; gap: 24px; }
+      .about-img { display: none; } /* 모바일: 이미지 숨기고 포인트만 */
+      .about-right { padding: 0; }
+      .ap h4 { font-size: 15px; }
+      .ap p { font-size: 13px; line-height: 1.7; }
+
+      /* ── STORY TEASER ── */
+      .story-teaser { padding: 22px 20px; flex-direction: column; align-items: stretch; gap: 16px; }
+      .story-teaser-quote { font-size: 15px; line-height: 1.55; }
+      .story-teaser-desc { font-size: 13px; }
+      .story-toggle-btn { width: 100%; justify-content: center; padding: 13px 20px; font-size: 14px; }
+
+      /* ── STORY BODY ── */
+      .chap { padding: 32px 0; }
+      .chap-title { font-size: 20px; }
+      .chap-body { font-size: 14px; line-height: 1.9; }
+      .story-quote { font-size: 13px; line-height: 1.8; }
+      .story-final-text { padding: 24px 20px; }
+      .story-final-text h3 { font-size: 18px; }
+      .story-final-text p { font-size: 13px; }
+
+      /* ── FREE CARDS ── */
+      .free-cards { grid-template-columns: 1fr; gap: 12px; }
+      .free-card { padding: 18px 20px; }
+      .free-card h4 { font-size: 15px; }
+
+      /* ── FUNNEL: 1열 가로 레이아웃 ── */
+      .funnel-grid { grid-template-columns: 1fr; gap: 10px; }
+      .fc {
+        padding: 16px 18px;
+        display: flex; flex-direction: row; align-items: center; gap: 14px;
+      }
+      .fc-icon { font-size: 28px; margin-bottom: 0; flex-shrink: 0; display: block; }
+      .fc-content { flex: 1; min-width: 0; }
+      .fc-num { font-size: 9px; letter-spacing: 1px; margin-bottom: 3px; display: block; }
+      .fc-q { font-size: 13px; font-weight: 900; line-height: 1.4; margin-bottom: 4px; }
+      .fc-a { font-size: 11px; color: var(--gray); line-height: 1.55; }
+      .fc-link { margin-top: 8px; font-size: 11px; }
+
+      /* ── PROGRAMS SECTION 헤더 ── */
+      .cat-name { font-size: 16px; }
+      .sec-inner > div[style*="margin-bottom: 40px"] { margin-bottom: 28px !important; }
+
+      /* ── CTA 섹션 ── */
+      .cta-sec { padding: 56px 20px; }
+      .cta-sec h2 { font-size: 22px; }
+      .cta-sec p { font-size: 14px; }
+      .cta-btn {
+        display: flex; align-items: center; justify-content: center;
+        padding: 16px 24px; font-size: 15px; min-height: 54px;
+      }
+    }
+
+    /* ── MOBILE CARD LAYOUT (≤640px) ── */
     @media (max-width: 640px) {
       .cards { grid-template-columns: 1fr; gap: 12px; }
       .pcard { flex-direction: row; border-radius: 14px; align-items: stretch; }
@@ -370,7 +450,7 @@
       .ptag { font-size: 9px; padding: 2px 7px; top: 8px; left: 8px; }
       .pbody { padding: 12px 14px; flex: 1; min-width: 0; justify-content: center; }
       .pname { font-size: 14px; margin-bottom: 4px; }
-      .pdesc { font-size: 12px; margin-bottom: 8px; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+      .pdesc { font-size: 12px; line-height: 1.65; margin-bottom: 8px; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
       .kw-tags { display: none; }
       .success-box { display: none; }
       .urgency { display: none; }
@@ -381,6 +461,25 @@
       .pprice-badge { display: none; }
       .pprice-row { gap: 4px; }
       .pbtn { padding: 6px 12px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+    }
+
+    /* ── STICKY BOTTOM CTA (모바일 전용) ── */
+    .sticky-cta { display: none; }
+    @media (max-width: 768px) {
+      .sticky-cta {
+        display: flex;
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 98;
+        background: var(--primary);
+        padding: 0 20px;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        box-shadow: 0 -3px 20px rgba(255,107,77,.3);
+      }
+      .sticky-cta a {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; color: white; text-decoration: none;
+        font-size: 15px; font-weight: 900; gap: 6px;
+        min-height: 52px; letter-spacing: -0.3px;
+      }
     }
 
     /* ── CTA ── */
@@ -699,39 +798,49 @@
     </div>
     <div class="funnel-grid fade-up">
       <div class="fc s2">
-        <span class="fc-num">STEP 1 · 결혼준비</span>
         <span class="fc-icon">💍</span>
-        <div class="fc-q">결혼 준비, 예산 낭비 없이 똑똑하게 하고 싶다면?</div>
-        <div class="fc-a">모든 결혼 준비 정보를 한 노션 템플릿에 빠짐없이 정리했어요.</div>
-        <a href="https://www.latpeed.com/products/uY-Mj" target="_blank" class="fc-link">살펴보기 →</a>
+        <div class="fc-content">
+          <span class="fc-num">STEP 1 · 결혼준비</span>
+          <div class="fc-q">결혼 준비, 예산 낭비 없이 똑똑하게 하고 싶다면?</div>
+          <div class="fc-a">모든 결혼 준비 정보를 한 노션 템플릿에 빠짐없이 정리했어요.</div>
+          <a href="https://www.latpeed.com/products/uY-Mj" target="_blank" class="fc-link">살펴보기 →</a>
+        </div>
       </div>
       <div class="fc s3">
-        <span class="fc-num">STEP 2 · 돈관리 기초</span>
         <span class="fc-icon">📔</span>
-        <div class="fc-q">작심3일로 끝나던 가계부, 이제 제대로 쓰고 싶다면?</div>
-        <div class="fc-a">신혼부부 전용 가계부로 돈이 어디서 새는지 한눈에 확인하세요.</div>
-        <a href="https://www.latpeed.com/products/jK8Va" target="_blank" class="fc-link">살펴보기 →</a>
+        <div class="fc-content">
+          <span class="fc-num">STEP 2 · 돈관리 기초</span>
+          <div class="fc-q">작심3일로 끝나던 가계부, 이제 제대로 쓰고 싶다면?</div>
+          <div class="fc-a">신혼부부 전용 가계부로 돈이 어디서 새는지 한눈에 확인하세요.</div>
+          <a href="https://www.latpeed.com/products/jK8Va" target="_blank" class="fc-link">살펴보기 →</a>
+        </div>
       </div>
       <div class="fc s4">
-        <span class="fc-num">STEP 3 · 1:1 진단코칭</span>
         <span class="fc-icon">🎯</span>
-        <div class="fc-q">우리 부부 돈 문제, 직접 진단받고 싶다면?</div>
-        <div class="fc-a">100명 선착순 25% 할인 중. 맞춤 솔루션을 한 번에 받아보세요.</div>
-        <a href="https://exciting-bull-fff.notion.site/1on1coach?source=copy_link" target="_blank" class="fc-link">신청하기 →</a>
+        <div class="fc-content">
+          <span class="fc-num">STEP 3 · 1:1 진단코칭</span>
+          <div class="fc-q">우리 부부 돈 문제, 직접 진단받고 싶다면?</div>
+          <div class="fc-a">100명 선착순 25% 할인 중. 맞춤 솔루션을 한 번에 받아보세요.</div>
+          <a href="https://exciting-bull-fff.notion.site/1on1coach?source=copy_link" target="_blank" class="fc-link">신청하기 →</a>
+        </div>
       </div>
       <div class="fc s4">
-        <span class="fc-num">STEP 4 · 스터디클럽</span>
         <span class="fc-icon">📚</span>
-        <div class="fc-q">꾸준히 함께 돈 공부하고 싶다면?</div>
-        <div class="fc-a">통장쪼개기·가계부·경제신문 챌린지로 신혼부부 돈관리 시스템을 만들어요.</div>
-        <a href="https://www.geekus.kr/bbyumoney_studyclub/about" target="_blank" class="fc-link">가입하기 →</a>
+        <div class="fc-content">
+          <span class="fc-num">STEP 4 · 스터디클럽</span>
+          <div class="fc-q">꾸준히 함께 돈 공부하고 싶다면?</div>
+          <div class="fc-a">통장쪼개기·가계부·경제신문 챌린지로 신혼부부 돈관리 시스템을 만들어요.</div>
+          <a href="https://www.geekus.kr/bbyumoney_studyclub/about" target="_blank" class="fc-link">가입하기 →</a>
+        </div>
       </div>
       <div class="fc s5">
-        <span class="fc-num">STEP 5 · 마스터클래스</span>
         <span class="fc-icon">🚀</span>
-        <div class="fc-q">투자·수익화까지 한 번에 완성하고 싶다면?</div>
-        <div class="fc-a">선착순 10커플 한정. 개인맞춤형 재테크 컨설팅으로 ETF·부동산·수익화까지 완성해요.</div>
-        <a href="https://cafe.naver.com/happybox55/2200" target="_blank" class="fc-link">자세히 보기 →</a>
+        <div class="fc-content">
+          <span class="fc-num">STEP 5 · 마스터클래스</span>
+          <div class="fc-q">투자·수익화까지 한 번에 완성하고 싶다면?</div>
+          <div class="fc-a">선착순 10커플 한정. 개인맞춤형 재테크 컨설팅으로 ETF·부동산·수익화까지 완성해요.</div>
+          <a href="https://cafe.naver.com/happybox55/2200" target="_blank" class="fc-link">자세히 보기 →</a>
+        </div>
       </div>
     </div>
   </div>
@@ -935,6 +1044,11 @@
   </div>
   <div class="foot-bottom">© 2026 해피씨쀼. All rights reserved.</div>
 </footer>
+
+<!-- ══ STICKY CTA (모바일 전용) ══ -->
+<div class="sticky-cta">
+  <a href="https://open.kakao.com/o/g93hXh1g" target="_blank">💬 무료 재테크 상담 받기 →</a>
+</div>
 
 <script>
   // Story toggle
