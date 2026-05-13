@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>신혼부부 전세 vs 월세 계산기 | 해피씨쀼</title>
+  <meta name="description" content="신혼부부를 위한 전세 vs 월세 시뮬레이션. 정책대출, 신용대출, 투자수익률을 함께 계산해 2년·4년·6년 뒤 예상 순자산을 비교해보세요." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #FF6B4D;
+      --primary-soft: #FFF4F1;
+      --pink: #E79796;
+      --cream: #FAD9A5;
+      --white: #FFFFFF;
+      --dark: #1A1A1A;
+      --gray: #6B7280;
+      --gray-2: #9CA3AF;
+      --light: #F9FAFB;
+      --border: #EBEBEB;
+      --good: #10B981;
+      --bad: #EF4444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      color: var(--dark);
+      background: var(--white);
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      line-height: 1.5;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      height: 60px; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--dark);
+      font-weight: 900; font-size: 16px; letter-spacing: -0.4px;
+    }
+    .nav-logo .home-arrow {
+      color: var(--gray); font-size: 13px; font-weight: 500;
+      padding-right: 10px; border-right: 1px solid var(--border); margin-right: 4px;
+    }
+    .nav-tag {
+      background: var(--primary-soft); color: var(--primary);
+      font-size: 11px; font-weight: 700;
+      padding: 5px 10px; border-radius: 100px;
+      border: 1px solid rgba(255,107,77,.18);
+      letter-spacing: 0.3px;
+    }
+    @media (max-width: 560px) {
+      nav { padding: 0 16px; }
+      .nav-logo { font-size: 14px; }
+      .nav-logo .home-arrow { font-size: 12px; padding-right: 8px; }
+      .nav-tag { font-size: 10px; padding: 4px 8px; }
+    }
+
+    /* LAYOUT */
+    main { padding-top: 60px; max-width: 1100px; margin: 0 auto; }
+
+    /* HEADER */
+    .page-header {
+      text-align: center; padding: 56px 24px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 {
+      font-size: clamp(26px, 4.6vw, 44px); font-weight: 900;
+      letter-spacing: -1.4px; margin-bottom: 14px; line-height: 1.2;
+    }
+    .page-header h1 .hl { color: var(--primary); }
+    .page-header p {
+      font-size: 14px; color: var(--gray); line-height: 1.85;
+      max-width: 560px; margin: 0 auto;
+    }
+    @media (max-width: 560px) {
+      .page-header { padding: 36px 18px 24px; }
+      .page-header p { font-size: 13px; }
+    }
+
+    /* SECTION */
+    section.block { padding: 36px 24px; border-bottom: 1px solid var(--border); }
+    @media (max-width: 560px) { section.block { padding: 28px 16px; } }
+    .sec-label {
+      font-size: 11px; font-weight: 700; color: var(--primary);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .sec-title {
+      font-size: clamp(18px, 2.6vw, 24px); font-weight: 900;
+      letter-spacing: -0.6px; margin-bottom: 18px;
+    }
+    .sec-sub { font-size: 13px; color: var(--gray); margin-top: -10px; margin-bottom: 18px; line-height: 1.7; }
+
+    /* SUMMARY CARDS */
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    }
+    @media (max-width: 860px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 460px) { .summary-grid { grid-template-columns: 1fr; } }
+    .sum-card {
+      background: linear-gradient(160deg, #FFF8F5, #FFFFFF 70%);
+      border: 1.5px solid var(--border); border-radius: 16px;
+      padding: 18px 18px 16px;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .sum-card.highlight {
+      background: linear-gradient(160deg, #FFF1EC, #FFF8F5 70%);
+      border-color: rgba(255,107,77,.35);
+    }
+    .sum-card .sum-tag {
+      font-size: 10px; font-weight: 700; color: var(--primary);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .sum-card .sum-case {
+      font-size: 13px; color: var(--gray); font-weight: 600; margin-bottom: 6px;
+    }
+    .sum-card .sum-value {
+      font-size: clamp(20px, 2.8vw, 26px); font-weight: 900;
+      letter-spacing: -0.5px; color: var(--dark);
+    }
+    .sum-card .sum-value.primary { color: var(--primary); }
+    .sum-card select.balance-select {
+      width: 100%; margin-top: 8px; padding: 8px 10px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      font-family: inherit; font-size: 13px; font-weight: 700;
+      background: white; color: var(--dark); cursor: pointer;
+    }
+    .sum-card select.balance-select:focus { outline: none; border-color: var(--primary); }
+
+    /* INPUT BLOCKS */
+    .input-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 18px;
+    }
+    @media (max-width: 560px) { .input-grid { grid-template-columns: 1fr; gap: 12px; } }
+    .input-row { display: flex; flex-direction: column; gap: 6px; }
+    .input-row label { font-size: 12.5px; font-weight: 700; color: var(--dark); letter-spacing: -0.2px; }
+    .input-row .hint { font-size: 11px; color: var(--gray-2); font-weight: 500; }
+    .input-wrap {
+      position: relative; display: flex; align-items: center;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      transition: border-color .15s, box-shadow .15s;
+      background: white;
+    }
+    .input-wrap:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,107,77,.1); }
+    .input-wrap input[type="number"] {
+      flex: 1; min-width: 0;
+      padding: 11px 12px; border: none; outline: none; background: transparent;
+      font-family: inherit; font-size: 14px; font-weight: 700; color: var(--dark);
+      text-align: right;
+    }
+    /* hide number spinners */
+    .input-wrap input[type="number"]::-webkit-outer-spin-button,
+    .input-wrap input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .input-wrap input[type="number"] { -moz-appearance: textfield; }
+    .input-wrap .unit {
+      padding-right: 12px; font-size: 12px; color: var(--gray); font-weight: 600;
+      flex-shrink: 0; user-select: none;
+    }
+
+    /* SLIDER ROW (rate w/ slider) */
+    .slider-row { display: flex; flex-direction: column; gap: 8px; }
+    .slider-row .slider-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    }
+    .slider-row .slider-head label { font-size: 13px; font-weight: 700; }
+    .slider-row .slider-head .val {
+      font-size: clamp(18px, 2.5vw, 22px); font-weight: 900; color: var(--primary);
+      letter-spacing: -0.3px;
+    }
+    .slider-row .slider-bottom {
+      display: grid; grid-template-columns: 1fr 110px; gap: 12px; align-items: center;
+    }
+    @media (max-width: 460px) { .slider-row .slider-bottom { grid-template-columns: 1fr; } }
+    input[type="range"].slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 6px; border-radius: 100px;
+      background: linear-gradient(to right, var(--primary) 0%, var(--primary) 50%, var(--border) 50%, var(--border) 100%);
+      outline: none; cursor: pointer;
+    }
+    input[type="range"].slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: white; border: 3px solid var(--primary);
+      cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.12);
+      transition: transform .15s;
+    }
+    input[type="range"].slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    input[type="range"].slider::-moz-range-thumb {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: white; border: 3px solid var(--primary);
+      cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,.12);
+    }
+    .slider-num {
+      display: flex; align-items: center;
+      border: 1.5px solid var(--border); border-radius: 10px; background: white;
+    }
+    .slider-num input {
+      flex: 1; min-width: 0;
+      padding: 8px 10px; border: none; outline: none; background: transparent;
+      font-family: inherit; font-size: 13px; font-weight: 700; text-align: right;
+    }
+    .slider-num input::-webkit-outer-spin-button,
+    .slider-num input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .slider-num input { -moz-appearance: textfield; }
+    .slider-num .unit { padding-right: 10px; font-size: 12px; color: var(--gray); font-weight: 600; }
+
+    /* PERIOD SLIDER (years) */
+    .period-row {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      background: var(--light); border-radius: 14px; padding: 14px 16px;
+      border: 1.5px solid var(--border);
+    }
+    .period-row .p-label { font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .period-row input[type="range"] { flex: 1; min-width: 160px; }
+    .period-row .p-val {
+      font-size: 18px; font-weight: 900; color: var(--primary);
+      min-width: 40px; text-align: right;
+    }
+
+    /* RESULT TABLE */
+    .table-wrap {
+      overflow-x: auto; border: 1.5px solid var(--border); border-radius: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+    table.result {
+      width: 100%; min-width: 980px; border-collapse: collapse;
+      font-size: 13px; background: white;
+    }
+    table.result thead th {
+      background: var(--light); color: var(--dark);
+      font-size: 11.5px; font-weight: 700; letter-spacing: -0.1px;
+      padding: 12px 10px; text-align: right;
+      border-bottom: 1.5px solid var(--border); white-space: nowrap;
+    }
+    table.result thead th:first-child,
+    table.result thead th:nth-child(2),
+    table.result thead th:last-child { text-align: left; }
+    table.result tbody td {
+      padding: 12px 10px; border-bottom: 1px solid var(--border);
+      text-align: right; vertical-align: top; white-space: nowrap;
+    }
+    table.result tbody td:first-child,
+    table.result tbody td:nth-child(2),
+    table.result tbody td:last-child { text-align: left; white-space: normal; }
+    table.result tbody tr:last-child td { border-bottom: none; }
+    table.result tbody tr:hover { background: #FFFBFA; }
+    table.result .case-id {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 28px; height: 22px; padding: 0 6px;
+      background: var(--primary-soft); color: var(--primary);
+      border-radius: 100px; font-weight: 900; font-size: 11px;
+    }
+    table.result .strategy { font-weight: 700; color: var(--dark); font-size: 12.5px; line-height: 1.45; min-width: 140px; }
+    table.result .strategy .sub { display: block; font-weight: 500; color: var(--gray); font-size: 11px; margin-top: 2px; }
+    table.result td.num-strong {
+      font-weight: 900; color: var(--primary); font-size: 13.5px;
+    }
+    table.result td.cost-good { color: var(--good); font-weight: 700; }
+    table.result td.cost-bad { color: var(--bad); font-weight: 700; }
+    table.result td.feature {
+      font-size: 11.5px; color: var(--gray); line-height: 1.55;
+      min-width: 200px; white-space: normal;
+    }
+    .scroll-hint {
+      font-size: 11px; color: var(--gray-2); text-align: center;
+      margin-top: 8px; display: none;
+    }
+    @media (max-width: 900px) { .scroll-hint { display: block; } }
+
+    /* CHARTS */
+    .charts-grid { display: grid; gap: 24px; grid-template-columns: 1fr; }
+    .chart-card {
+      background: white; border: 1.5px solid var(--border); border-radius: 16px;
+      padding: 20px 18px 16px;
+    }
+    .chart-card h3 {
+      font-size: 14px; font-weight: 900; margin-bottom: 4px; letter-spacing: -0.3px;
+    }
+    .chart-card .chart-sub { font-size: 11.5px; color: var(--gray); margin-bottom: 18px; }
+    .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+    .chart-legend .lg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--gray); font-weight: 600; }
+    .chart-legend .lg .dot { width: 10px; height: 10px; border-radius: 3px; }
+    .chart-area {
+      display: flex; gap: 8px; align-items: flex-end;
+      height: 220px; padding-bottom: 32px; position: relative;
+      border-bottom: 1.5px solid var(--border);
+    }
+    @media (max-width: 560px) {
+      .chart-area { height: 180px; gap: 4px; padding-bottom: 28px; }
+    }
+    .chart-col {
+      flex: 1; min-width: 0; display: flex; flex-direction: column;
+      align-items: center; height: 100%; position: relative;
+    }
+    .chart-bars {
+      flex: 1; width: 100%; display: flex; gap: 3px;
+      align-items: flex-end; justify-content: center;
+    }
+    .chart-bar {
+      flex: 1; min-width: 6px; max-width: 28px;
+      background: linear-gradient(to top, var(--primary), #FFB29F);
+      border-radius: 5px 5px 0 0;
+      position: relative;
+      transition: height .45s cubic-bezier(.4,0,.2,1);
+    }
+    .chart-bar.b2 { background: linear-gradient(to top, #FF6B4D, #FF8E78); }
+    .chart-bar.b4 { background: linear-gradient(to top, #FF8E78, #FFB29F); }
+    .chart-bar.b6 { background: linear-gradient(to top, #FFB29F, #FFD2C5); }
+    .chart-bar .bar-val {
+      position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+      margin-bottom: 4px; font-size: 9.5px; font-weight: 700;
+      color: var(--dark); white-space: nowrap; opacity: 0;
+      transition: opacity .2s;
+    }
+    .chart-col:hover .chart-bar .bar-val { opacity: 1; }
+    .chart-x {
+      position: absolute; bottom: -28px; left: 0; right: 0;
+      text-align: center; font-size: 11px; font-weight: 700; color: var(--gray);
+    }
+    .chart-single .chart-bar { max-width: 56px; }
+
+    /* STRATEGY CARDS */
+    .strategy-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 860px) { .strategy-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .strategy-grid { grid-template-columns: 1fr; } }
+    .str-card {
+      background: white; border: 1.5px solid var(--border); border-radius: 16px;
+      padding: 18px 18px 16px;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+    }
+    .str-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.06); border-color: rgba(255,107,77,.25); }
+    .str-card .str-badge {
+      display: inline-block; background: var(--primary-soft); color: var(--primary);
+      font-size: 11px; font-weight: 800; padding: 3px 10px;
+      border-radius: 100px; margin-bottom: 10px; letter-spacing: 0.5px;
+    }
+    .str-card h4 { font-size: 14px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .str-card p { font-size: 12.5px; color: var(--gray); line-height: 1.7; }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      background: var(--light); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px 20px; font-size: 12px; color: var(--gray); line-height: 1.85;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 36px 24px; text-align: center;
+      border-top: 1px solid var(--border); background: var(--light);
+    }
+    footer .f-logo { font-size: 16px; font-weight: 900; margin-bottom: 6px; letter-spacing: -0.4px; }
+    footer .f-tag { font-size: 12px; color: var(--gray); margin-bottom: 14px; }
+    footer .f-link {
+      display: inline-block; padding: 8px 18px;
+      background: white; border: 1.5px solid var(--border); border-radius: 100px;
+      text-decoration: none; color: var(--dark); font-size: 12.5px; font-weight: 700;
+      transition: all .2s;
+    }
+    footer .f-link:hover { border-color: var(--primary); color: var(--primary); }
+    footer .copyright { margin-top: 18px; font-size: 11px; color: var(--gray-2); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../">
+    <span class="home-arrow">← 해피씨쀼</span>
+    <span>계산기</span>
+  </a>
+  <span class="nav-tag">무료</span>
+</nav>
+
+<main>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>신혼부부 <span class="hl">전세 vs 월세</span> 계산기</h1>
+    <p>전세보증금, 월세, 대출, 투자수익률을 함께 계산해<br/>우리 부부에게 맞는 주거 전략을 비교해보세요.</p>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <section class="block">
+    <div class="sec-label">자동 추천</div>
+    <div class="sec-title">우리에게 가장 좋은 전략은?</div>
+    <div class="summary-grid">
+      <div class="sum-card highlight">
+        <div class="sum-tag">🏆 2년 뒤 순자산 최대</div>
+        <div class="sum-case" id="sum-best-case">-</div>
+        <div class="sum-value primary" id="sum-best-value">-</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-tag">💰 월 주거비 최저</div>
+        <div class="sum-case" id="sum-cheap-case">-</div>
+        <div class="sum-value" id="sum-cheap-value">-</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-tag">📈 월 투자 가능금 최대</div>
+        <div class="sum-case" id="sum-invest-case">-</div>
+        <div class="sum-value" id="sum-invest-value">-</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-tag">⚖️ 우리 부부의 밸런스형</div>
+        <select class="balance-select" id="balance-select">
+          <option value="0">CASE1 · 전세 + 대출 80%</option>
+          <option value="1">CASE2 · 전세 + 직접 입력 대출</option>
+          <option value="2">CASE3 · 월세 + 대출 없음</option>
+          <option value="3">CASE4 · 월세 + 신용대출 투자</option>
+          <option value="4">CASE5 · 최소보증금 월세</option>
+          <option value="5">CASE6 · 최대보증금 월세</option>
+        </select>
+        <div class="sum-value" id="sum-balance-value" style="margin-top:10px;font-size:18px">-</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUT: BASIC -->
+  <section class="block">
+    <div class="sec-label">STEP 1</div>
+    <div class="sec-title">기본 자산</div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label>현재 보유 시드</label>
+        <div class="input-wrap"><input type="number" id="i-seed" value="200000000" step="1000000"/><span class="unit">원</span></div>
+        <span class="hint">예시: 200,000,000 = 2억</span>
+      </div>
+      <div class="input-row">
+        <label>월 투자 가능 총예산</label>
+        <div class="input-wrap"><input type="number" id="i-monthlyBudget" value="2500000" step="100000"/><span class="unit">원/월</span></div>
+        <span class="hint">월 주거비 + 월 투자금에 쓸 수 있는 총액</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUT: JEONSE -->
+  <section class="block">
+    <div class="sec-label">STEP 2</div>
+    <div class="sec-title">전세 조건</div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label>전세금</label>
+        <div class="input-wrap"><input type="number" id="i-jeonseAmount" value="470000000" step="10000000"/><span class="unit">원</span></div>
+      </div>
+      <div class="input-row">
+        <label>전세대출 금리 (연)</label>
+        <div class="input-wrap"><input type="number" id="i-jeonseRate" value="2.5" step="0.1"/><span class="unit">%</span></div>
+        <span class="hint">버팀목 등 정책대출 기준</span>
+      </div>
+      <div class="input-row">
+        <label>전세대출 비율 (CASE1)</label>
+        <div class="input-wrap"><input type="number" id="i-jeonseLoanRatio" value="80" step="5"/><span class="unit">%</span></div>
+      </div>
+      <div class="input-row">
+        <label>직접 입력 대출금 (CASE2)</label>
+        <div class="input-wrap"><input type="number" id="i-jeonseLoanCustom" value="270000000" step="10000000"/><span class="unit">원</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUT: RENT -->
+  <section class="block">
+    <div class="sec-label">STEP 3</div>
+    <div class="sec-title">월세 조건</div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label>기본 월세 보증금</label>
+        <div class="input-wrap"><input type="number" id="i-rentDeposit" value="140000000" step="10000000"/><span class="unit">원</span></div>
+      </div>
+      <div class="input-row">
+        <label>기본 월세</label>
+        <div class="input-wrap"><input type="number" id="i-rentMonthly" value="1200000" step="50000"/><span class="unit">원/월</span></div>
+      </div>
+      <div class="input-row">
+        <label>최소보증금</label>
+        <div class="input-wrap"><input type="number" id="i-minDeposit" value="50000000" step="5000000"/><span class="unit">원</span></div>
+      </div>
+      <div class="input-row">
+        <label>최소보증금 월세</label>
+        <div class="input-wrap"><input type="number" id="i-minDepositRent" value="1800000" step="50000"/><span class="unit">원/월</span></div>
+      </div>
+      <div class="input-row">
+        <label>최대보증금</label>
+        <div class="input-wrap"><input type="number" id="i-maxDeposit" value="250000000" step="10000000"/><span class="unit">원</span></div>
+      </div>
+      <div class="input-row">
+        <label>최대보증금 월세</label>
+        <div class="input-wrap"><input type="number" id="i-maxDepositRent" value="500000" step="50000"/><span class="unit">원/월</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUT: LOAN / RETURN -->
+  <section class="block">
+    <div class="sec-label">STEP 4</div>
+    <div class="sec-title">대출 / 투자 조건</div>
+    <div class="input-grid">
+      <div class="input-row">
+        <label>신용대출 금액 (CASE4)</label>
+        <div class="input-wrap"><input type="number" id="i-creditLoan" value="100000000" step="10000000"/><span class="unit">원</span></div>
+      </div>
+      <div class="input-row">
+        <label>신용대출 금리 (연)</label>
+        <div class="input-wrap"><input type="number" id="i-creditRate" value="5.5" step="0.1"/><span class="unit">%</span></div>
+      </div>
+
+      <div class="input-row slider-row">
+        <div class="slider-head">
+          <label>적금 수익률 (연)</label>
+          <span class="val"><span id="savings-val">3.0</span>%</span>
+        </div>
+        <div class="slider-bottom">
+          <input type="range" id="s-savings" class="slider" min="0" max="20" step="0.1" value="3"/>
+          <div class="slider-num">
+            <input type="number" id="i-savingsReturn" value="3" step="0.1" min="0" max="20"/>
+            <span class="unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-row slider-row">
+        <div class="slider-head">
+          <label>ETF 기대수익률 (연)</label>
+          <span class="val"><span id="etf-val">8.0</span>%</span>
+        </div>
+        <div class="slider-bottom">
+          <input type="range" id="s-etf" class="slider" min="0" max="20" step="0.1" value="8"/>
+          <div class="slider-num">
+            <input type="number" id="i-etfReturn" value="8" step="0.1" min="0" max="20"/>
+            <span class="unit">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="period-row" style="margin-top:18px">
+      <span class="p-label">📅 보조 시뮬레이션 기간</span>
+      <input type="range" id="s-years" min="1" max="10" step="1" value="3"/>
+      <span class="p-val"><span id="years-val">3</span>년</span>
+    </div>
+    <div class="sec-sub" style="margin-top:8px;margin-bottom:0">기본 2/4/6년에 추가로 N년 컬럼이 표에 표시됩니다.</div>
+  </section>
+
+  <!-- RESULT TABLE -->
+  <section class="block">
+    <div class="sec-label">RESULT</div>
+    <div class="sec-title">전략별 통합 비교표</div>
+    <div class="sec-sub">강조된 숫자는 ETF 기준 6년 뒤 예상 순자산입니다.</div>
+    <div class="table-wrap">
+      <table class="result">
+        <thead>
+          <tr>
+            <th>CASE</th>
+            <th>주거 전략</th>
+            <th>월 주거비</th>
+            <th>묶이는 돈</th>
+            <th>남는 시드</th>
+            <th>월 투자 가능금</th>
+            <th>실질비용<br/>(적금)</th>
+            <th>실질비용<br/>(ETF)</th>
+            <th>2년 뒤<br/>순자산</th>
+            <th>4년 뒤<br/>순자산</th>
+            <th>6년 뒤<br/>순자산</th>
+            <th><span id="th-custom-y">3</span>년 뒤<br/>순자산</th>
+            <th>특징</th>
+          </tr>
+        </thead>
+        <tbody id="result-body"></tbody>
+      </table>
+    </div>
+    <div class="scroll-hint">← 좌우로 스크롤하면 모든 컬럼을 볼 수 있어요 →</div>
+  </section>
+
+  <!-- CHARTS -->
+  <section class="block">
+    <div class="sec-label">CHART</div>
+    <div class="sec-title">기간별 자산 비교</div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>① CASE별 2/4/6년 예상 순자산 (ETF 기준)</h3>
+        <p class="chart-sub">시점이 길수록 막대가 높습니다.</p>
+        <div class="chart-legend">
+          <div class="lg"><span class="dot" style="background:#FF6B4D"></span>2년</div>
+          <div class="lg"><span class="dot" style="background:#FF8E78"></span>4년</div>
+          <div class="lg"><span class="dot" style="background:#FFB29F"></span>6년</div>
+        </div>
+        <div class="chart-area" id="chart-asset"></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>② CASE별 월 주거비</h3>
+        <p class="chart-sub">대출 이자 + 월세를 합한 실제 월별 부담.</p>
+        <div class="chart-area chart-single" id="chart-housing"></div>
+      </div>
+
+      <div class="chart-card">
+        <h3>③ CASE별 월 투자 가능금</h3>
+        <p class="chart-sub">월 예산에서 주거비를 뺀 투자 여력.</p>
+        <div class="chart-area chart-single" id="chart-investable"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRATEGY CARDS -->
+  <section class="block">
+    <div class="sec-label">STRATEGY</div>
+    <div class="sec-title">전략별 한 줄 해석</div>
+    <div class="strategy-grid" id="strategy-grid"></div>
+  </section>
+
+  <!-- DISCLAIMER -->
+  <section class="block">
+    <div class="disclaimer">
+      ⚠️ 본 계산기는 단순 시뮬레이션입니다. 실제 대출 가능 여부, 금리, 세금, 중도상환수수료, 보증보험, 전월세전환율, 투자 손실 가능성은 반영하지 않았습니다. ETF 수익률은 기대값이며 확정수익이 아닙니다.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="f-logo">해피씨쀼</div>
+  <div class="f-tag">신혼부부 재테크의 모든 것 · 해피씨 × 얌돌이의 실제 경험을 나눕니다</div>
+  <a class="f-link" href="../">← 해피씨쀼 메인으로</a>
+  <div class="copyright">© 2026 해피씨쀼. All rights reserved.</div>
+</footer>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  seed: 200_000_000,
+  monthlyBudget: 2_500_000,
+  jeonseAmount: 470_000_000,
+  jeonseRate: 0.025,
+  jeonseLoanRatio: 0.80,
+  jeonseLoanCustom: 270_000_000,
+  rentDeposit: 140_000_000,
+  rentMonthly: 1_200_000,
+  minDeposit: 50_000_000,
+  minDepositRent: 1_800_000,
+  maxDeposit: 250_000_000,
+  maxDepositRent: 500_000,
+  creditLoan: 100_000_000,
+  creditRate: 0.055,
+  savingsReturn: 0.03,
+  etfReturn: 0.08,
+  customYears: 3,
+  balanceCaseIdx: 0,
+};
+
+const CASE_META = [
+  { id: 1, name: '전세 + 대출 80%', sub: '정책대출 활용', desc: '정책대출을 활용해 주거 안정성과 투자 여력을 동시에 확보하는 밸런스형 전략입니다.' },
+  { id: 2, name: '전세 + 직접 입력 대출', sub: '대출금 직접 설정', desc: '월 현금흐름은 안정적이지만 시드가 대부분 묶여 투자 기회 대응력은 낮아질 수 있습니다.' },
+  { id: 3, name: '월세 + 대출 없음', sub: '가장 일반적인 월세', desc: '가장 일반적인 월세 전략입니다. 유동성은 확보되지만 월세 부담으로 월 투자 가능금이 줄어듭니다.' },
+  { id: 4, name: '월세 + 신용대출 투자', sub: '공격형 레버리지', desc: '신용대출까지 활용하는 공격형 전략입니다. 기대수익은 높지만 하락장과 현금흐름 리스크가 큽니다.' },
+  { id: 5, name: '최소보증금 월세', sub: '유동성 극대화', desc: '최소보증금으로 현금을 많이 남기는 전략입니다. 기회 대응력은 높지만 월세 부담이 큽니다.' },
+  { id: 6, name: '최대보증금 월세', sub: '준전세형', desc: '최대보증금으로 월세를 낮추는 준전세형 전략입니다. 안정적이지만 유동성은 낮아질 수 있습니다.' },
+];
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const clamp0 = v => Math.max(0, v);
+
+function formatKRW(n) {
+  if (!isFinite(n)) return '-';
+  const v = Math.round(n);
+  if (v === 0) return '0원';
+  const sign = v < 0 ? '-' : '';
+  const abs = Math.abs(v);
+  const eok = Math.floor(abs / 100_000_000);
+  const man = Math.floor((abs % 100_000_000) / 10_000);
+  const won = abs % 10_000;
+  if (eok > 0 && man > 0) return `${sign}${eok}억 ${man.toLocaleString()}만`;
+  if (eok > 0) return `${sign}${eok}억`;
+  if (man > 0) return `${sign}${man.toLocaleString()}만`;
+  return `${sign}${won.toLocaleString()}원`;
+}
+
+function formatKRWShort(n) {
+  if (!isFinite(n)) return '-';
+  const v = Math.round(n);
+  if (v === 0) return '0';
+  const sign = v < 0 ? '-' : '';
+  const abs = Math.abs(v);
+  const eok = abs / 100_000_000;
+  if (eok >= 1) return `${sign}${eok.toFixed(eok >= 10 ? 0 : 1).replace(/\.0$/, '')}억`;
+  const man = abs / 10_000;
+  if (man >= 1) return `${sign}${Math.round(man)}만`;
+  return `${sign}${abs}`;
+}
+
+function fvInitial(principal, annualRate, years) {
+  return principal * Math.pow(1 + annualRate, years);
+}
+
+function fvMonthly(monthly, annualRate, years) {
+  const r = annualRate / 12;
+  const n = years * 12;
+  if (r === 0) return monthly * n;
+  return monthly * ((Math.pow(1 + r, n) - 1) / r);
+}
+
+/* ============================================================
+   CALCULATION
+   ============================================================ */
+function buildCase(s, idx) {
+  let monthlyHousing = 0;
+  let lockedMoney = 0;
+  let leftoverSeed = 0;
+  let returnedDeposit = 0;
+  let remainingDebt = 0;
+  let strategyDetail = '';
+
+  if (idx === 0) {
+    // CASE1: 전세 80% 대출
+    const loan = s.jeonseAmount * s.jeonseLoanRatio;
+    const equity = s.jeonseAmount - loan;
+    monthlyHousing = loan * s.jeonseRate / 12;
+    lockedMoney = equity;
+    leftoverSeed = clamp0(s.seed - equity);
+    returnedDeposit = equity;
+    remainingDebt = 0;
+    strategyDetail = `자기자본 ${formatKRW(equity)} · 대출 ${formatKRW(loan)}`;
+  } else if (idx === 1) {
+    // CASE2: 전세 + 직접 입력 대출
+    const loan = s.jeonseLoanCustom;
+    const equity = s.jeonseAmount - loan;
+    monthlyHousing = loan * s.jeonseRate / 12;
+    lockedMoney = equity;
+    leftoverSeed = clamp0(s.seed - equity);
+    returnedDeposit = equity;
+    remainingDebt = 0;
+    strategyDetail = `자기자본 ${formatKRW(equity)} · 대출 ${formatKRW(loan)}`;
+  } else if (idx === 2) {
+    // CASE3: 월세 + 대출 없음
+    monthlyHousing = s.rentMonthly;
+    lockedMoney = s.rentDeposit;
+    leftoverSeed = clamp0(s.seed - s.rentDeposit);
+    returnedDeposit = s.rentDeposit;
+    remainingDebt = 0;
+    strategyDetail = `보증금 ${formatKRW(s.rentDeposit)} · 월세 ${formatKRW(s.rentMonthly)}`;
+  } else if (idx === 3) {
+    // CASE4: 월세 + 신용대출 투자
+    monthlyHousing = s.rentMonthly + s.creditLoan * s.creditRate / 12;
+    lockedMoney = s.rentDeposit;
+    leftoverSeed = clamp0(s.seed - s.rentDeposit + s.creditLoan);
+    returnedDeposit = s.rentDeposit;
+    remainingDebt = s.creditLoan;
+    strategyDetail = `보증금 ${formatKRW(s.rentDeposit)} · 신용대출 ${formatKRW(s.creditLoan)}`;
+  } else if (idx === 4) {
+    // CASE5: 최소보증금 월세
+    monthlyHousing = s.minDepositRent;
+    lockedMoney = s.minDeposit;
+    leftoverSeed = clamp0(s.seed - s.minDeposit);
+    returnedDeposit = s.minDeposit;
+    remainingDebt = 0;
+    strategyDetail = `보증금 ${formatKRW(s.minDeposit)} · 월세 ${formatKRW(s.minDepositRent)}`;
+  } else {
+    // CASE6: 최대보증금 월세 (부족분은 전세대출 금리로 차입)
+    const shortfall = clamp0(s.maxDeposit - s.seed);
+    monthlyHousing = s.maxDepositRent + shortfall * s.jeonseRate / 12;
+    lockedMoney = s.maxDeposit;
+    leftoverSeed = clamp0(s.seed - s.maxDeposit);
+    returnedDeposit = s.maxDeposit;
+    remainingDebt = shortfall;
+    const shortStr = shortfall > 0 ? ` · 부족분 대출 ${formatKRW(shortfall)}` : '';
+    strategyDetail = `보증금 ${formatKRW(s.maxDeposit)} · 월세 ${formatKRW(s.maxDepositRent)}${shortStr}`;
+  }
+
+  const monthlyInvestable = clamp0(s.monthlyBudget - monthlyHousing);
+  const savingsExpectedYield = leftoverSeed * s.savingsReturn / 12;
+  const etfExpectedYield = leftoverSeed * s.etfReturn / 12;
+  const savingsRealCost = monthlyHousing - savingsExpectedYield;
+  const etfRealCost = monthlyHousing - etfExpectedYield;
+
+  const assetAt = (years, annualRate) => {
+    const fv = fvInitial(leftoverSeed, annualRate, years)
+             + fvMonthly(monthlyInvestable, annualRate, years);
+    return fv + returnedDeposit - remainingDebt;
+  };
+
+  return {
+    ...CASE_META[idx],
+    monthlyHousing,
+    lockedMoney,
+    leftoverSeed,
+    monthlyInvestable,
+    savingsRealCost,
+    etfRealCost,
+    returnedDeposit,
+    remainingDebt,
+    strategyDetail,
+    asset2y_etf: assetAt(2, s.etfReturn),
+    asset4y_etf: assetAt(4, s.etfReturn),
+    asset6y_etf: assetAt(6, s.etfReturn),
+    assetCustom_etf: assetAt(s.customYears, s.etfReturn),
+    asset2y_sav: assetAt(2, s.savingsReturn),
+    asset4y_sav: assetAt(4, s.savingsReturn),
+    asset6y_sav: assetAt(6, s.savingsReturn),
+  };
+}
+
+function calculateScenarios(s) {
+  return [0, 1, 2, 3, 4, 5].map(i => buildCase(s, i));
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderTable(scenarios) {
+  const tbody = document.getElementById('result-body');
+  tbody.innerHTML = scenarios.map(c => `
+    <tr>
+      <td><span class="case-id">${c.id}</span></td>
+      <td><div class="strategy">${c.name}<span class="sub">${c.strategyDetail}</span></div></td>
+      <td>${formatKRW(c.monthlyHousing)}</td>
+      <td>${formatKRW(c.lockedMoney)}</td>
+      <td>${formatKRW(c.leftoverSeed)}</td>
+      <td>${formatKRW(c.monthlyInvestable)}</td>
+      <td class="${c.savingsRealCost < 0 ? 'cost-good' : 'cost-bad'}">${formatKRW(c.savingsRealCost)}</td>
+      <td class="${c.etfRealCost < 0 ? 'cost-good' : 'cost-bad'}">${formatKRW(c.etfRealCost)}</td>
+      <td>${formatKRW(c.asset2y_etf)}</td>
+      <td>${formatKRW(c.asset4y_etf)}</td>
+      <td class="num-strong">${formatKRW(c.asset6y_etf)}</td>
+      <td>${formatKRW(c.assetCustom_etf)}</td>
+      <td class="feature">${c.desc}</td>
+    </tr>
+  `).join('');
+  document.getElementById('th-custom-y').textContent = state.customYears;
+}
+
+function renderSummary(scenarios) {
+  const bestAsset = scenarios.reduce((a, b) => b.asset2y_etf > a.asset2y_etf ? b : a);
+  const cheapest = scenarios.reduce((a, b) => b.monthlyHousing < a.monthlyHousing ? b : a);
+  const mostInvestable = scenarios.reduce((a, b) => b.monthlyInvestable > a.monthlyInvestable ? b : a);
+  const balance = scenarios[state.balanceCaseIdx];
+
+  document.getElementById('sum-best-case').textContent = `CASE${bestAsset.id} · ${bestAsset.name}`;
+  document.getElementById('sum-best-value').textContent = formatKRW(bestAsset.asset2y_etf);
+
+  document.getElementById('sum-cheap-case').textContent = `CASE${cheapest.id} · ${cheapest.name}`;
+  document.getElementById('sum-cheap-value').textContent = `월 ${formatKRW(cheapest.monthlyHousing)}`;
+
+  document.getElementById('sum-invest-case').textContent = `CASE${mostInvestable.id} · ${mostInvestable.name}`;
+  document.getElementById('sum-invest-value').textContent = `월 ${formatKRW(mostInvestable.monthlyInvestable)}`;
+
+  document.getElementById('sum-balance-value').textContent = `6년 뒤 ${formatKRW(balance.asset6y_etf)}`;
+}
+
+function renderChart(elId, data, getValues, labels) {
+  // data: scenarios; getValues(c) -> number[] (single or multi)
+  const el = document.getElementById(elId);
+  const allValues = data.flatMap(c => getValues(c).map(v => clamp0(v)));
+  const max = Math.max(1, ...allValues);
+  el.innerHTML = data.map(c => {
+    const values = getValues(c);
+    const bars = values.map((v, i) => {
+      const h = (clamp0(v) / max) * 100;
+      const cls = labels && labels.length > 1 ? `chart-bar b${[2,4,6][i] || 2}` : 'chart-bar';
+      return `<div class="${cls}" style="height:${h}%"><span class="bar-val">${formatKRWShort(v)}</span></div>`;
+    }).join('');
+    return `<div class="chart-col">
+      <div class="chart-bars">${bars}</div>
+      <span class="chart-x">CASE${c.id}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderCharts(scenarios) {
+  renderChart('chart-asset', scenarios, c => [c.asset2y_etf, c.asset4y_etf, c.asset6y_etf], ['2년','4년','6년']);
+  renderChart('chart-housing', scenarios, c => [c.monthlyHousing]);
+  renderChart('chart-investable', scenarios, c => [c.monthlyInvestable]);
+}
+
+function renderStrategy(scenarios) {
+  const grid = document.getElementById('strategy-grid');
+  grid.innerHTML = scenarios.map(c => `
+    <div class="str-card">
+      <span class="str-badge">CASE ${c.id}</span>
+      <h4>${c.name}</h4>
+      <p>${c.desc}</p>
+    </div>
+  `).join('');
+}
+
+function render() {
+  const scenarios = calculateScenarios(state);
+  renderSummary(scenarios);
+  renderTable(scenarios);
+  renderCharts(scenarios);
+  renderStrategy(scenarios);
+}
+
+/* ============================================================
+   INPUT BINDING
+   ============================================================ */
+const rateFields = new Set(['jeonseRate', 'jeonseLoanRatio', 'creditRate', 'savingsReturn', 'etfReturn']);
+
+function bindNumberInput(elId, key) {
+  const el = document.getElementById(elId);
+  el.addEventListener('input', () => {
+    const raw = parseFloat(el.value);
+    let v = isNaN(raw) ? 0 : raw;
+    if (rateFields.has(key)) v = v / 100;
+    state[key] = v;
+    render();
+  });
+}
+
+function bindSliderPair(sliderId, numId, key, valLabelId) {
+  const slider = document.getElementById(sliderId);
+  const num = document.getElementById(numId);
+  const valLabel = valLabelId ? document.getElementById(valLabelId) : null;
+
+  const sync = (sourceVal, fromSlider) => {
+    let v = parseFloat(sourceVal);
+    if (isNaN(v)) v = 0;
+    v = Math.max(0, Math.min(20, v));
+    // Update other input
+    if (fromSlider) num.value = v;
+    else slider.value = v;
+    if (valLabel) valLabel.textContent = v.toFixed(1);
+    state[key] = v / 100;
+    // Update slider gradient
+    const pct = (v / 20) * 100;
+    slider.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+    render();
+  };
+
+  slider.addEventListener('input', () => sync(slider.value, true));
+  num.addEventListener('input', () => sync(num.value, false));
+  // initial gradient
+  sync(slider.value, true);
+}
+
+function bindYearsSlider() {
+  const slider = document.getElementById('s-years');
+  const label = document.getElementById('years-val');
+  const sync = () => {
+    state.customYears = parseInt(slider.value, 10) || 1;
+    label.textContent = state.customYears;
+    const pct = ((state.customYears - 1) / 9) * 100;
+    slider.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+    render();
+  };
+  slider.addEventListener('input', sync);
+  sync();
+}
+
+function bindBalanceSelect() {
+  const sel = document.getElementById('balance-select');
+  sel.addEventListener('change', () => {
+    state.balanceCaseIdx = parseInt(sel.value, 10) || 0;
+    render();
+  });
+}
+
+function init() {
+  // basic number inputs
+  bindNumberInput('i-seed', 'seed');
+  bindNumberInput('i-monthlyBudget', 'monthlyBudget');
+  bindNumberInput('i-jeonseAmount', 'jeonseAmount');
+  bindNumberInput('i-jeonseRate', 'jeonseRate');
+  bindNumberInput('i-jeonseLoanRatio', 'jeonseLoanRatio');
+  bindNumberInput('i-jeonseLoanCustom', 'jeonseLoanCustom');
+  bindNumberInput('i-rentDeposit', 'rentDeposit');
+  bindNumberInput('i-rentMonthly', 'rentMonthly');
+  bindNumberInput('i-minDeposit', 'minDeposit');
+  bindNumberInput('i-minDepositRent', 'minDepositRent');
+  bindNumberInput('i-maxDeposit', 'maxDeposit');
+  bindNumberInput('i-maxDepositRent', 'maxDepositRent');
+  bindNumberInput('i-creditLoan', 'creditLoan');
+  bindNumberInput('i-creditRate', 'creditRate');
+
+  // slider + number pairs
+  bindSliderPair('s-savings', 'i-savingsReturn', 'savingsReturn', 'savings-val');
+  bindSliderPair('s-etf', 'i-etfReturn', 'etfReturn', 'etf-val');
+
+  // years
+  bindYearsSlider();
+
+  // balance select
+  bindBalanceSelect();
+
+  render();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
