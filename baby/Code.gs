@@ -14,12 +14,25 @@ function doPost(e) {
     return json({ ok: true, deleted: true });
   }
   if (p.type === '일기') return json(writeDiary(p.note));
+  if (p.text) p = parseText(p.text);
+  if (!p) return json({ ok: false, say: '숫자를 못 알아들었어요. 다시 말해 주세요.' });
   var amount = Number(p.amount) || 0;
   var type = p.type || '분유';
   var when = p.time ? new Date(p.time) : new Date();
   if (isNaN(when)) when = new Date();
   sheet.appendRow([when, type, amount, p.note || '']);
-  return json({ ok: true, time: fmt(when), type: type, amount: amount });
+  return json({ ok: true, time: fmt(when), type: type, amount: amount, say: type + ' ' + amount + (type === '모유' ? '분' : 'ml') + ' 기록했어요.' });
+}
+
+// 말로 한 문장 해석: "20분 먹였어" → 모유 20, "240ml 먹었어" → 분유 240, "유축 90" → 유축 90
+function parseText(text) {
+  var t = String(text);
+  var num = t.match(/\d+/);
+  if (!num) return null;
+  var type = '분유';
+  if (/유축/.test(t)) type = '유축';
+  else if (/모유|직수/.test(t) || (/\d+\s*분(?!유)/.test(t) && !/ml|㎖|밀리|미리|cc/i.test(t))) type = '모유';
+  return { type: type, amount: num[0], note: t };
 }
 
 function doGet(e) {
