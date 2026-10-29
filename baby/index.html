@@ -124,7 +124,7 @@
     <ol>
       <li>단축어 앱 → + → 이름 "분유 기록"</li>
       <li>동작 추가: <code>입력 요청</code> → 유형 숫자, 질문 "몇 ml?"</li>
-      <li>동작 추가: <code>URL 콘텐츠 가져오기</code> → URL은 위 /exec 주소, 방법 POST, 요청 본문 "양식"</li>
+      <li>동작 추가: <code>URL 콘텐츠 가져오기</code> → 동작을 펼쳐서 방법을 먼저 POST로 바꾸면 "요청 본문"이 나타남. JSON이든 양식이든 상관없음</li>
       <li>양식 필드 추가: <code>type</code> = 분유, <code>amount</code> = (입력 요청 결과 변수)</li>
       <li>"시리야, 분유 기록" → "120" 하면 끝</li>
     </ol>
@@ -193,7 +193,7 @@
       rows = await (await fetch(API, { cache: 'no-store' })).json();
       rows.sort((a, b) => parse(a.time) - parse(b.time));
       $('msg').textContent = '';
-    } catch (e) { $('msg').textContent = '불러오기 실패. URL을 확인하세요.'; }
+    } catch (e) { $('msg').textContent = '불러오기 실패: ' + e.message; }
     render();
   }
 
