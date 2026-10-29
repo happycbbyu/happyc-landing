@@ -65,6 +65,12 @@ function writeDiary(text) {
 // 편집기에서 한 번 실행: 권한 승인 + 문서 생성 확인용
 function testDiary() { Logger.log(writeDiary('테스트 일기')); }
 
+// 편집기에서 실행: 이 스크립트가 어느 시트를 읽는지, 줄이 몇 개인지 확인용
+function testRead() {
+  var sh = SpreadsheetApp.getActiveSheet();
+  Logger.log('파일: ' + SpreadsheetApp.getActive().getName() + ' / 탭: ' + sh.getName() + ' / 줄 수: ' + sh.getLastRow() + ' / 첫 칸: ' + sh.getRange(1, 1).getValue());
+}
+
 // 시간대 오프셋을 붙여 보내면 폰이 어디서 열어도 같은 시각으로 계산됨
 function fmt(v) {
   return v instanceof Date ? Utilities.formatDate(v, TZ, "yyyy-MM-dd'T'HH:mm:ssXXX") : String(v);
